@@ -39,16 +39,7 @@ variable "vpc_setup" {
        #  - "assign_generated_ipv6_cidr_block" - Assigns an IPv6 CIDR block
        #  - "amazon_side_asn=<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
        options                          = list(string)
-       #assign_generated_ipv6_cidr_block = bool
        tags                             = map(string)
-       #The below settings will ensure the specified gateway is created
-       #and assigned to this VPC
-       #has_vpn_gateway                  = bool
-       #has_internet_gateway             = bool
-       #has_egress_only_internet_gateway = bool
-       #Only set if creating a VPN gateway and if you have a number you must use
-       #Set to null to use Amazon default value
-       #amazon_side_asn                  = number 
  
        subnets = list(
          object({
