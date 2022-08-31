@@ -26,7 +26,7 @@ locals {
 
 #Build our VPN gateways
 resource "aws_vpn_gateway" "vpn_gateways" {
-  for_each         = local.vpcs_with_vpn_gateways
+  for_each         = toset(local.vpcs_with_vpn_gateways)
   vpc_id           = module.vpcs[each.key].vpc.id
   #amazon_side_asn  = each.value > 0 ? each.value : null
   amazon_side_asn = length(local.vpcs_with_custom_asn[each.key]) > 0 ? local.vpcs_with_custom_asn[each.key][0] : null
