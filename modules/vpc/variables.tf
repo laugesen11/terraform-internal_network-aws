@@ -3,6 +3,9 @@
 #    - name                             - the name of this VPC we can reference in the parent module
 #    - cidr_block                       - The IPv4 CIDR block we are assigning to this VPC (/16 to /28) 
 #    - assign_generated_ipv6_cidr_block - Assigns a generated /64 IPv6 CIDR block to this VPC
+#    - instance_tenancy                 - assigns the default instance tenancy (dedicated or default)
+#    - enable_dns_support               - Enables DNS support in the VPC by AWS. Otherwise have to make custom setup
+#    - enable_dns_hostname              - Enables DNS hostnames to be auto assignes to instances
 #    - tags                             - Tags to help describe this VPC
 #    - subnets                          - The subnets we will create in this VPC
 #          - subnets sub variables:
@@ -27,6 +30,18 @@ variable "assign_generated_ipv6_cidr_block" {
 
 variable "tags" {
   type = map(string)
+}
+
+variable "enable_dns_support" {
+  type = bool
+}
+
+variable "enable_dns_hostname" {
+  type = bool
+}
+
+variable "instance_tenancy" {
+  type = string
 }
 
 variable "subnets" {

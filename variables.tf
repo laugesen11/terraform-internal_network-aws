@@ -28,16 +28,27 @@ variable "vpc_setup" {
      object({
        name                             = string
        cidr_block                       = string
-       assign_generated_ipv6_cidr_block = bool
+       #Sets up options values for VPC
+       #Valid values include:
+       #  - "has_vpn_gateway"                  - sets up a Virtual Private gateway (VPN gateway) to this VPC
+       #  - "has_internet_gateway"             - sets up an Internet gateway to this VPC
+       #  - "has_egress_only_internet_gateway" - sets up an Egress Only Internet gateway to this VPC
+       #  - "dedicated_tenancy"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
+       #  - "disable_dns_support"              - Overrides default setting that sets enable_dns_support to true
+       #  - "enable_dns_hostname"              - Overrides default setting that sets enable_dns_hostname to false
+       #  - "assign_generated_ipv6_cidr_block" - Assigns an IPv6 CIDR block
+       #  - "amazon_side_asn=<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
+       options                          = list(string)
+       #assign_generated_ipv6_cidr_block = bool
        tags                             = map(string)
        #The below settings will ensure the specified gateway is created
        #and assigned to this VPC
-       has_vpn_gateway                  = bool
-       has_internet_gateway             = bool
-       has_egress_only_internet_gateway = bool
+       #has_vpn_gateway                  = bool
+       #has_internet_gateway             = bool
+       #has_egress_only_internet_gateway = bool
        #Only set if creating a VPN gateway and if you have a number you must use
        #Set to null to use Amazon default value
-       amazon_side_asn                  = number 
+       #amazon_side_asn                  = number 
  
        subnets = list(
          object({

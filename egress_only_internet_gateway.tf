@@ -8,7 +8,7 @@ locals {
   #Gets the list of VPCs we need egress only internet gateways for
   vpcs_with_egress_only_internet_gateways = [
     for item in var.vpc_setup:
-      item.name if item.has_egress_only_internet_gateway
+      item.name if contains(item.options,"has_egress_only_internet_gateway")
   ]
 }
 

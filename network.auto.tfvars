@@ -2,12 +2,12 @@ vpc_setup=[
   { 
     name                             = "Larry test VPC"
     cidr_block                       = "10.0.0.0/16"
-    assign_generated_ipv6_cidr_block = false
+#    assign_generated_ipv6_cidr_block = false
     tags                             = { "Env" : "Test" }
-    has_vpn_gateway                  = true
-    has_internet_gateway             = true
-    has_egress_only_internet_gateway = true
-    amazon_side_asn = -1
+ #   has_vpn_gateway                  = true
+ #   has_internet_gateway             = true
+ #   has_egress_only_internet_gateway = true
+ #   amazon_side_asn = -1
     subnets = [
     {
         name              = "Larry Test Subnet"

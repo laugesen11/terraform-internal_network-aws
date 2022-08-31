@@ -8,7 +8,7 @@ locals{
   #Gets the list of VPCs we need internet gateways for
   vpcs_with_internet_gateways = [
     for item in var.vpc_setup:
-      item.name if item.has_internet_gateway
+      item.name if contains(item.options,"has_internet_gateway")
   ]
 }
 

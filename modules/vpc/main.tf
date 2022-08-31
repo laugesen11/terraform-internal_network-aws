@@ -17,6 +17,9 @@ locals {
 resource "aws_vpc" "vpc" {
   cidr_block                       = var.cidr_block
   assign_generated_ipv6_cidr_block = var.assign_generated_ipv6_cidr_block
+  enable_dns_support               = var.enable_dns_support
+  enable_dns_hostname              = var.enable_dns_hostname
+  instance_tenancy                 = var.instance_tenancy
   tags                             = merge({"Name" = var.name}, var.tags)
 }
 
