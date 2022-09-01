@@ -42,10 +42,10 @@ locals {
 #Build our VPC
 resource "aws_vpc" "vpc" {
   cidr_block                       = var.cidr_block
-  assign_generated_ipv6_cidr_block = var.assign_generated_ipv6_cidr_block
-  enable_dns_support               = var.enable_dns_support
-  enable_dns_hostnames             = var.enable_dns_hostname
-  instance_tenancy                 = var.instance_tenancy
+  assign_generated_ipv6_cidr_block = contains(var.options,"assign_generated_ipv6_cidr_block")
+  enable_dns_support               = contains(var.options,"disable_dns_support") ? false : true
+  enable_dns_hostnames             = contains(var.options,"enable_dns_hostname")
+  instance_tenancy                 = contains(var.options,"dedicated_tenancy") ? "dedicated" : "default"
   tags                             = merge({"Name" = var.name}, var.tags)
 }
 

@@ -23,25 +23,18 @@ variable "cidr_block" {
   type = string
 }
 
-variable "assign_generated_ipv6_cidr_block" {
-  type    = bool
-  default = false
-}
-
 variable "tags" {
   type = map(string)
 }
 
-variable "enable_dns_support" {
-  type = bool
-}
-
-variable "enable_dns_hostname" {
-  type = bool
-}
-
-variable "instance_tenancy" {
-  type = string
+#Valid values include:
+#  - "dedicated_tenancy"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
+#  - "disable_dns_support"              - Overrides default setting that sets enable_dns_support to true
+#  - "enable_dns_hostname"              - Overrides default setting that sets enable_dns_hostname to false
+#  - "assign_generated_ipv6_cidr_block" - Assigns an IPv6 CIDR block
+variable "options" {
+  type    = list(string)
+  default = null
 }
 
 variable "subnets" {
