@@ -4,9 +4,7 @@ locals {
   #Set up the subnets we are building
   subnet_config = {
     for item in var.subnets: item.name => {
-      #"availability_zone"                = item.availability_zone
       "cidr_block"                       = item.cidr_block
-      #"ipv6_cidr_block"                  = item.ipv6_cidr_block
       "options"                          = item.options
       "tags"                             = merge({"Name" = item.name},item.tags)
     }

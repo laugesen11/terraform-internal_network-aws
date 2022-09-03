@@ -10,8 +10,8 @@ locals {
   #Get the VPCs we need to create NACLs for
   nacl_vpcs = {
     for item in var.nacl_egress_rules:
-      #If we specified the VPC ID, we use that. If not, we pull the ID from the VPC module using the VPC name
-      item.nacl_name => item.nacl_vpc_id != null ? item.nacl_vpc_id : module.vpcs[item.nacl_vpc_name].vpc.id
+      #Check if we can pull the ID from the VPC module using the VPC name. If not, we assume this is the VPC ID
+      item.nacl_name => lookup(module.vpcs,item.vpc,null) != null ? module.vpcs[item.vpc].vpc.id : item.vpc
   }
 
   nacl_subnets = {
@@ -20,9 +20,10 @@ locals {
     for item in var.nacl_ingress_rules:
       item.nacl_name => [
         for subnet in item.nacl_subnets: 
-          #If we specified the VPC ID, we expect the subnet ID to be provided directly.
-          #If not, we pull the subnet ID from the VPC module using the VPC name
-          item.nacl_vpc_id == null ? module.vpcs[item.nacl_vpc_name].subnets[subnet].id : subnet
+          #Check if we can pull the VPC ID from the VPC module using the VPC name. If so, we try to pull the subnet from here
+          #If not, we assume this is the ID of an existing subnet
+          #item.nacl_vpc_id == null ? module.vpcs[item.nacl_vpc_name].subnets[subnet].id : subnet
+          lookup(module.vpcs,item.vpc,null) == null ? subnet : ( lookup(module.vpcs[item.vpc].subnets,subnet,null) != null ? module.vpcs[item.vpc].subnets[subnet].id : subnet )
       ]
   }
   

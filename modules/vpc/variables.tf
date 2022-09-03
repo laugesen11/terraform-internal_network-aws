@@ -41,10 +41,8 @@ variable "subnets" {
   type =  list(
     object({
       name                    = string
-      #availability_zone       = string
       #Only set to null if you also specify "ipv6_native" and setup an IPv CIDR block in options
       cidr_block              = string
-      #ipv6_cidr_block         = string
       tags                    = map(string)
       #Sets optional values for subnets
       #Valid values include:
