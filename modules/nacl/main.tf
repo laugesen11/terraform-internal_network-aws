@@ -56,8 +56,8 @@ locals {
   egress_rules = {
     for item in var.egress: item.rule_number => {
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_protocol_setup_egress for this rule. 
-      #Otherwise we assume "item.traffic_type" is set to a value in local.item.traffic_type_mappings map.
-      protocol        = item.item.traffic_type == null || item.item.traffic_type == "custom" ? local.custom_protocol_setup_egress[item.rule_number][0] : local.item.traffic_type_mappings[item.traffic_type]["protocol"]
+      #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
+      protocol        = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_protocol_setup_egress[item.rule_number][0] : local.traffic_type_mappings[item.traffic_type]["protocol"]
  
       #Set to "allow" unless we have "deny_access" in options list
       action          = contains(item.options,"deny_access") ? "deny" : "allow"
@@ -68,27 +68,27 @@ locals {
       ipv6_cidr_block = length(regexall(":",item.external_ip_address)) > 0 ? item.external_ip_address : null
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_from_port_setup_egress for this rule. 
-      #Otherwise we assume "item.traffic_type" is set to a value in local.item.traffic_type_mappings map.
-      from_port       = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_from_port_setup_egress[item.rule_number][0] : local.item.traffic_type_mappings[item.traffic_type]["from_port"]
+      #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
+      from_port       = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_from_port_setup_egress[item.rule_number][0] : local.traffic_type_mappings[item.traffic_type]["from_port"]
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_to_port_setup_egress for this rule. 
-      #Otherwise we assume "item.traffic_type" is set to a value in local.item.traffic_type_mappings map.
-      to_port         = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_to_port_setup_egress[item.rule_number][0] : local.item.traffic_type_mappings[item.traffic_type]["to_port"]
+      #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
+      to_port         = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_to_port_setup_egress[item.rule_number][0] : local.traffic_type_mappings[item.traffic_type]["to_port"]
 
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in local.custom_icmp_type_setup_egress for this rule. 
-      icmp_type       = (item.traffic_type == null || item.traffic_type == "custom") && protocol == "icmp" && length(local.custom_icmp_type_setup_egress[item.rule_number]) > 0 ? local.custom_icmp_type_setup_egress[item.rule_number][0] : null
+      icmp_type       = (item.traffic_type == null || item.traffic_type == "custom") && local.custom_protocol_setup_egress[item.rule_number][0] == "icmp" && length(local.custom_icmp_type_setup_egress[item.rule_number]) > 0 ? local.custom_icmp_type_setup_egress[item.rule_number][0] : null
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in local.custom_icmp_code_setup_egress for this rule. 
-      icmp_code       = (item.traffic_type == null || item.traffic_type == "custom") && protocol == "icmp" && length(local.custom_icmp_code_setup_egress[item.rule_number]) > 0 ? local.custom_icmp_code_setup_egress[item.rule_number][0] : null
+      icmp_code       = (item.traffic_type == null || item.traffic_type == "custom") && local.custom_protocol_setup_egress[item.rule_number][0] == "icmp" && length(local.custom_icmp_code_setup_egress[item.rule_number]) > 0 ? local.custom_icmp_code_setup_egress[item.rule_number][0] : null
     }
   }
 
   ingress_rules = {
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_protocol_setup_egress for this rule. 
-      #Otherwise we assume "item.traffic_type" is set to a value in local.item.traffic_type_mappings map.
+      #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
     for item in var.ingress: item.rule_number => {
-      protocol        = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_protocol_setup_ingress[item.rule_number][0] : item.traffic_type_mappings[item.traffic_type]["protocol"]
+      protocol        = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_protocol_setup_ingress[item.rule_number][0] : local.traffic_type_mappings[item.traffic_type]["protocol"]
 
       #Set to "allow" unless we have "deny_access" in options list
       action          = contains(item.options,"deny_access") ? "deny" : "allow"
@@ -99,7 +99,7 @@ locals {
       ipv6_cidr_block = length(regexall(":",item.external_ip_address)) > 0 ? item.external_ip_address : null
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_from_port_setup_ingress for this rule. 
-      #Otherwise we assume "item.traffic_type" is set to a value in local.item.traffic_type_mappings map.
+      #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
       from_port       = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_from_port_setup_ingress[item.rule_number][0] : item.traffic_type_mappings[item.traffic_type]["from_port"]
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_to_port_setup_egress for this rule. 
@@ -107,10 +107,10 @@ locals {
       to_port         = item.traffic_type == null || item.traffic_type == "custom" ? local.custom_to_port_setup_ingress[item.rule_number][0] : item.traffic_type_mappings[item.traffic_type]["to_port"]
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in local.custom_icmp_type_setup_ingress for this rule. 
-      icmp_type       = (item.traffic_type == null || item.traffic_type == "custom") && protocol == "icmp" && length(local.custom_icmp_type_setup_ingress[item.rule_number]) > 0 ? local.custom_icmp_type_setup_ingress[item.rule_number][0] : null
+      icmp_type       = (item.traffic_type == null || item.traffic_type == "custom") && local.custom_protocol_setup_egress[item.rule_number][0] == "icmp" && length(local.custom_icmp_type_setup_ingress[item.rule_number]) > 0 ? local.custom_icmp_type_setup_ingress[item.rule_number][0] : null
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in local.custom_icmp_code_setup_ingress for this rule. 
-      icmp_code       = (item.traffic_type == null || item.traffic_type == "custom") && protocol == "icmp" && length(local.custom_icmp_code_setup_ingress[item.rule_number]) > 0 ? local.custom_icmp_code_setup_ingress[item.rule_number][0] : null
+      icmp_code       = (item.traffic_type == null || item.traffic_type == "custom") && local.custom_protocol_setup_egress[item.rule_number][0] == "icmp" && length(local.custom_icmp_code_setup_ingress[item.rule_number]) > 0 ? local.custom_icmp_code_setup_ingress[item.rule_number][0] : null
     }
   }
 
