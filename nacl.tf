@@ -19,7 +19,7 @@ locals {
     #We only use egress because it is expected you will set an ingress and egress rule for each subnet
     for item in var.nacl_ingress_rules:
       item.nacl_name => [
-        for subnet in item.nacl_subnets: 
+        for subnet in item.subnets: 
           #Check if we can pull the VPC ID from the VPC module using the VPC name. If so, we try to pull the subnet from here
           #If not, we assume this is the ID of an existing subnet
           #item.nacl_vpc_id == null ? module.vpcs[item.nacl_vpc_name].subnets[subnet].id : subnet
