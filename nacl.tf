@@ -33,7 +33,6 @@ locals {
         for rule in item.nacl_rules: 
           rule if !contains(rule.options,"is_ingress")
       ]
- item.nacl_rules
   }
 
   #Sets the ingress rulese for this NACL
