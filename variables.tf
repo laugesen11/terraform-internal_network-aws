@@ -96,7 +96,7 @@ variable "nacl_setup" {
 
           #Sets the IPv4 or IPv6 address of the external IP address we are recieving traffic from or directing traffic to
           #We use pattern matching on this value to determine which it is
-          external_ip_address = string
+          external_cidr_range = string
 
  
           #Sets optional settings for rules

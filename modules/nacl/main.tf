@@ -62,10 +62,10 @@ locals {
       #Set to "allow" unless we have "deny_access" in options list
       action          = contains(item.options,"deny_access") ? "deny" : "allow"
    
-      #Set to the external_ip_address value set in the rule if external_ip_address contains a "."
-      cidr_block      = length(regexall("\\.",item.external_ip_address)) > 0 ? item.external_ip_address : null
-      #Set to the external_ip_address value set in the rule if external_ip_address contains a ":"
-      ipv6_cidr_block = length(regexall(":",item.external_ip_address)) > 0 ? item.external_ip_address : null
+      #Set to the external_cidr_range value set in the rule if external_cidr_range contains a "."
+      cidr_block      = length(regexall("\\.",item.external_cidr_range)) > 0 ? item.external_cidr_range : null
+      #Set to the external_cidr_range value set in the rule if external_cidr_range contains a ":"
+      ipv6_cidr_block = length(regexall(":",item.external_cidr_range)) > 0 ? item.external_cidr_range : null
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_from_port_setup_egress for this rule. 
       #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
@@ -93,10 +93,10 @@ locals {
       #Set to "allow" unless we have "deny_access" in options list
       action          = contains(item.options,"deny_access") ? "deny" : "allow"
 
-      #Set to the external_ip_address value set in the rule if external_ip_address contains a "."
-      cidr_block      = length(regexall("\\.",item.external_ip_address)) > 0 ? item.external_ip_address : null
-      #Set to the external_ip_address value set in the rule if external_ip_address contains a ":"
-      ipv6_cidr_block = length(regexall(":",item.external_ip_address)) > 0 ? item.external_ip_address : null
+      #Set to the external_cidr_range value set in the rule if external_cidr_range contains a "."
+      cidr_block      = length(regexall("\\.",item.external_cidr_range)) > 0 ? item.external_cidr_range : null
+      #Set to the external_cidr_range value set in the rule if external_cidr_range contains a ":"
+      ipv6_cidr_block = length(regexall(":",item.external_cidr_range)) > 0 ? item.external_cidr_range : null
 
       #If "item.traffic_type" is set to null or "custom", we use the values set in local.custom_from_port_setup_ingress for this rule. 
       #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
