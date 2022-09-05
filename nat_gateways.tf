@@ -64,7 +64,8 @@ resource "aws_eip" "eips_for_nat_gateways" {
 #Create our NAT gateways
 resource "aws_nat_gateway" "nat_gateways" {
   for_each          = local.nat_gateways_config
-  allocation_id     = each.value.has_elastic_ip ? aws_eip.eips_for_nat_gateways[each.key].id : null
+  #allocation_id     = each.value.has_elastic_ip ? aws_eip.eips_for_nat_gateways[each.key].id : null
+  allocation_id     = lookup(aws_eip.eips_for_nat_gateways,each.key,null) != null ? aws_eip.eips_for_nat_gateways[each.key].id : (length(local.elastic_ip_ids[each.key]) > 0 ? local.elastic_ip_ids[each.key][0] : null)
   connectivity_type = each.value.is_public ? "public" : "private"
   subnet_id         = each.value.subnet
   tags              = each.value.tags
