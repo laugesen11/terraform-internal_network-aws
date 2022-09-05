@@ -10,15 +10,15 @@ locals{
   #Gets the VPCs specified by the options 
   #This is necessary to use the subnet name
   #Catches if "vpc_name=<string>" is set in options list
-  nat_gateway_vpcs = {
-     for item in var.nat_gateways:
-       #If the string matches "vpc_name=<string>" pull the value of "<string>"
-       #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
-       item.name => [
-         for option in item.options:
-           chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*vpc_name\\s*=\\s*\\S",option)) > 0
-       ]
-  }
+  #nat_gateway_vpcs = {
+  #   for item in var.nat_gateways:
+  #     #If the string matches "vpc_name=<string>" pull the value of "<string>"
+  #     #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+  #     item.name => [
+  #       for option in item.options:
+  #         chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*vpc_name\\s*=\\s*\\S",option)) > 0
+  #     ]
+  #}
  
   nat_gateways_config = {  
     for item in var.nat_gateways: item.name => {
