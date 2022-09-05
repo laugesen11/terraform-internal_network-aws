@@ -29,7 +29,7 @@ locals{
       #subnet_name_or_id will be assumed to be the name of a subnet set in this module. 
       #If vpc_name is null, we assume subnet_name_or_id is the ID of a subnet
       #"subnet" = length(local.nat_gateway_vpcs[item.name]) > 0 ? module.vpcs[local.nat_gateway_vpcs[item.name][0]].subnets[item.subnet].id : item.subnet
-      "subnet" = length([for item in values(module.vpcs)[*].subnets: item.id if contains(keys(item),item.subnet)]) > 0 ? element([for item in values(module.vpcs)[*].subnets: item.id if contains(keys(item),item.subnet)],0) : item.subnet
+      "subnet" = length([for subnet in values(module.vpcs)[*].subnets: subnet.id if contains(keys(subnet),item.subnet)]) > 0 ? element([for subnet in values(module.vpcs)[*].subnets: subnet.id if contains(keys(subnet),item.subnet)],0) : item.subnet
     }
   }
  
