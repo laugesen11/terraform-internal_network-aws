@@ -129,6 +129,8 @@ variable "nat_gateways" {
       #  - "is_public"          - makes this a public NAT Gateway. Otherwise this is private
       #  - "elastic_ip_id=<id>" - attached already created elastic IP to this NAT gateway
       #  - "vpc_name=<string>"  - allows us to pull the subnet value from the vpc module using the name of a VPC defined in the internal_network module
+      options        = list(string)   
+ 
       #Need both of these values set to use a subnet name set in this module
       #If not, assumes you are using the subnet name
       subnet = string
