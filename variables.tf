@@ -122,14 +122,17 @@ variable "nat_gateways" {
   type = list(
     object({
       name           = string
-      has_elastic_ip = bool
-      is_public      = bool
-      tags           = map(string)
- 
+      
+      #Sets optional values
+      #Valid values include:
+      #  - "make_elastic_ip"    - make a new elastic IP and attach to this NAT gateway
+      #  - "is_public"          - makes this a public NAT Gateway. Otherwise this is private
+      #  - "elastic_ip_id=<id>" - attached already created elastic IP to this NAT gateway
+      #  - "vpc_name=<string>"  - allows us to pull the subnet value from the vpc module using the name of a VPC defined in the internal_network module
       #Need both of these values set to use a subnet name set in this module
       #If not, assumes you are using the subnet name
-      vpc_name          = string
-      subnet_name_or_id = string
+      subnet = string
+      tags           = map(string)
     })
   )
   

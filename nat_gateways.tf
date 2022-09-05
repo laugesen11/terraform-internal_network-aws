@@ -6,24 +6,49 @@
 #  - vpc.tf       - creates VPCs and subnets we place NAT Gateway in
 
 locals{
+
+  #Gets the VPCs specified by the options 
+  #This is necessary to use the subnet name
+  #Catches if "vpc_name=<string>" is set in options list
+  nat_gateway_vpcs = {
+     for item in var.nat_gateways:
+       #If the string matches "vpc_name=<string>" pull the value of "<string>"
+       #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+       item.name => [
+         for option in item.options:
+           chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*vpc_name\\s*=\\s*\\S",option)) > 0
+       ]
+  }
+ 
   nat_gateways_config = {  
     for item in var.nat_gateways: item.name => {
-      "has_elastic_ip" = item.has_elastic_ip
-      "is_public" = item.is_public
+      "is_public" = contains(item.options,"is_public")
       "tags" = item.tags
 
       #If we specify the VPC name, we use that value to determine the subnet ID from this module
       #subnet_name_or_id will be assumed to be the name of a subnet set in this module. 
       #If vpc_name is null, we assume subnet_name_or_id is the ID of a subnet
-      "subnet" = item.vpc_name != null ? module.vpcs[item.vpc_name].subnets[item.subnet_name_or_id].id : item.subnet_name_or_id
+      "subnet" = length(local.nat_gateway_vpcs[item.name]) > 0 ? module.vpcs[local.nat_gateway_vpcs[item.name][0]].subnets[item.subnet].id : item.subnet
     }
   }
  
   #List of NAT Gateway names that need elastic IP address
   elastic_ips_to_make = [
     for item in var.nat_gateways: 
-      item.name if item.has_elastic_ip
+      item.name if contains(item.options,"make_elastic_ip")
   ]
+  
+  #List of NAT gateway names with existing EIP ID submitted
+  #If the setting "elastic_ip_id=<id>" is set, we capture that value
+  elastic_ip_ids = {
+    for item in var.nat_gateways:
+      #If the string matches  "elastic_ip_id=<id>" pull the value of "<id>"
+      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+      item.name => [
+        for option in item.options:
+          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*elastic_ip_id\\s*=\\s*\\S",option)) > 0
+      ]
+  }
 }
 
 #Create our elastic IP addresses
