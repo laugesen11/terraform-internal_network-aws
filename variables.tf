@@ -209,15 +209,17 @@ variable "transit_gateways" {
   type = list(
     object({
       name                                   = string 
-      description                            = string 
       tags                                   = map(string)    
-      #Set if you have a specific ASN you need to use. If not, set to null to use AWS automatically assigned ASN
-      amazon_side_asn                        = number
-      auto_accept_shared_attachments         = bool
-      enable_default_route_table_association = bool
-      enable_default_route_table_propagation = bool
-      enable_dns_support                     = bool
-      enable_vpn_ecmp_support                = bool
+      
+      #Sets optional values for transit gateway
+      #  Valid values:
+      #    - "amazon_side_asn=<number>"               - Set if you have a specific ASN you need to use. 
+      #    - "auto_accept_shared_attachments"         - Whether resource attachment requests are automatically accepted
+      #    - "enable_default_route_table_association" - Whether resource attachments are automatically associated with the default association route table
+      #    - "enable_default_route_table_propagation" - Whether resource attachments automatically propagate routes to the default propagation route table 
+      #    - "enable_dns_support"                     - Whether DNS support is enabled
+      #    - "enable_vpn_ecmp_support"                - Whether VPN Equal Cost Multipath Protocol support is enabled
+      options                                = list(string)
     })
   )
 }
@@ -231,24 +233,21 @@ variable "transit_gateway_vpc_attachments" {
       name                       = string
       #If entry matches a name in the "transit_gateways" variable, we use that ID
       #Otherwise we assume this is the ID of an external transit gateway
-      transit_gateway_name_or_id = string
-      #Entry must matche a name in the "vpc_setup" variable
-      #MUST use this value if intending to use subnet names as defined in 'vpc_setup' with 'subnets' setting below
-      vpc_name                   = string
-      #If defined, we ignore 'vpc_name' and cannot use subnet names as defined in 'vpc_setup'
-      vpc_id                     = string
-      #Is vpc_name is defined (and vpc_id is not), can use subnets names as defined in 'vpc_setup' variable
-      #If not, all entries must be a valid subnet ID
+      transit_gateway            = string
+      #If entry matches a name in the "vpc_setup" variable, we use that. Otherwise we expect this is a VPC IS
+      vpc                        = string
+      #If we can resolve a name in "vpc_setup" variable, we use that ID. Otherwise we expect this is a subnet ID
       subnets                    = list(string)
       tags                       = map(string)
 
-      #For all the settings below, a value of 'true' will enable this setting.
-      #Look at the transit gateway attachment documentation to understand what this setting does
-      enable_appliance_mode_support                          = bool
-      enable_dns_support                                     = bool
-      enable_ipv6_support                                    = bool
-      enable_transit_gateway_default_route_table_association = bool
-      enable_transit_gateway_default_route_table_propagation = bool
+      #Sets optional values for transit gateway VPC attachment
+      #  Valid values:
+      #    - "enable_appliance_mode_support" - If enabled, a traffic flow between a source and destination uses the same Availability Zone for the VPC attachment for the lifetime of that flow
+      #    - "disable_dns_support" - Whether DNS support is enabled
+      #    - "enable_ipv6_support" - Whether IPv6 support is enabled
+      #    - "enable_transit_gateway_default_route_table_association" - Boolean whether the VPC Attachment should be associated with the EC2 Transit Gateway association default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways 
+      #    - "enable_transit_gateway_default_route_table_propagation" - Boolean whether the VPC Attachment should propagate routes with the EC2 Transit Gateway propagation default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways
+      options                    = list(string)
     })
   )
 }
