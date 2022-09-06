@@ -66,7 +66,7 @@ locals{
       #If one or either cannot be resolved, we assume this is a subnet ID
       "subnet_ids"  = [
         for subnet in item.subnets: 
-          lookup(module.vpcs,item.vpc,null) == null ? subnet : (lookup(module.vpcs[item.vpc].subnets,subnet,null) != null ? module.vpcs[item.vpc_name].subnets[subnet].id : subnet ) 
+          lookup(module.vpcs,item.vpc,null) == null ? subnet : (lookup(module.vpcs[item.vpc].subnets,subnet,null) != null ? module.vpcs[item.vpc].subnets[subnet].id : subnet ) 
       ]
     }
   } : {}
