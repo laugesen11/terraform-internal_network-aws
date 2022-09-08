@@ -37,7 +37,7 @@ locals {
       "requestor_vpc_id"                      = lookup(module.vpcs,item.requestor_vpc,null) != null ? module.vpcs[item.requestor_vpc].vpc.id : item.requestor_vpc
       "peer_vpc_id"                           = lookup(module.vpcs,item.peer_vpc,null) != null ? module.vpcs[item.peer_vpc].vpc.id : item.peer_vpc
       "peer_owner_id"                         = length(local.peer_owner_id_options[item.name]) > 0 ? local.peer_owner_id_options[item.name][0] : null
-      "peer_region"                           = length(local.peer_region_options[item.name]) > 0 ? local.peer_region_options[item.name] : null
+      "peer_region"                           = length(local.peer_region_options[item.name]) > 0 ? local.peer_region_options[item.name] : ""
       "auto_accept"                           = contains(item.options,"auto_accept")
       "accepter_allow_remote_dns_resolution"  = contains(item.options,"accepter_allow_remote_dns_resolution")
       "requester_allow_remote_dns_resolution" = contains(item.options,"requester_allow_remote_dns_resolution")
