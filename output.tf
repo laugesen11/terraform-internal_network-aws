@@ -33,9 +33,9 @@ output "transit_gateways" {
   value = aws_ec2_transit_gateway.transit_gateways
 }
 
-output "vpc_endpoints" {
-  value = aws_vpc_endpoint.vpc_endpoints
-}
+#output "vpc_endpoints" {
+#  value = aws_vpc_endpoint.vpc_endpoints
+#}
 
 output "vpc_peering_connections" {
   value = aws_vpc_peering_connection.vpc_peering_connections
