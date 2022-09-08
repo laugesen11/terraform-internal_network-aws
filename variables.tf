@@ -147,60 +147,56 @@ variable "vpc_peering" {
   type = list(
     object({
       #Name for the connection
-      name                                  = string 
+      name          = string 
        
       #Use the VPC name from this module or an external VPC ID
-      requestor_vpc_name_or_id              = string
+      requestor_vpc = string
 
       #Use the VPC name from this module or an external VPC ID
-      peer_vpc_name_or_id                   = string
-      peer_owner_id                         = string
-      auto_accept                           = bool
-      peer_region                           = string
-      accepter_allow_remote_dns_resolution  = bool
-      requester_allow_remote_dns_resolution = bool
+      peer_vpc      = string
+      
+      #Sets optional values
+      #Valid values include:
+      #  - "auto_accept" - Accept the peering (both VPCs need to be in the same AWS account and region).
+      #  - "accepter_allow_remote_dns_resolution" - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
+      #  - "requester_allow_remote_dns_resolution" - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
+      #  - "peer_region=<region>" - region of the accepter VPC of the VPC Peering Connection (auto_accept must be false)
+      #  - "peer_owner_id=<id>" - The AWS account ID of the owner of the peer VPC. Defaults to the account ID the AWS provider is currently connected to.
+      options       = list(string)     
+
       tags                                  = map(string) 
     })
   )
 }
 
-variable "vpc_endpoints" {
-  description = "Sets up VPC endpoint"
-  default     = null
-  type = list(
-    object({
-      name                = string
- 
-      #Specify the AWS service this endpoint is for
-      service_name        = string
-      auto_accept         = bool
-      private_dns_enabled = bool
-      security_group_ids  = list(string)
-   
-      #Below settings determine how we pull subnet and VPC ID values
-      #Will use this value if not set to null
-      #Will IGNORE vpc_name if vpc_id is not null
-      vpc_id              = string
-      
-      #Set this value to allow lookups of names of subnets in this module
-      #Must set vpc_name to the name of a VPC set in this module
-      vpc_name            = string
-
-      #Can be "Gateway", "GatewayLoadBalancer", or "Interface"
-      vpc_endpoint_type   = string
-      tags                = map(string)
-
-      #Specifies the subnet this endpoint is for
-      #Can use the name of a subnet in this file, or the ID if you know it
-      subnets             = list(
-        object({
-          name = string
-          id   = string
-        })
-      )
-    })
-  )
-}
+#variable "vpc_endpoints" {
+#  description = "Sets up VPC endpoint"
+#  default     = null
+#  type = list(
+#    object({
+#      name                = string
+# 
+#      #Specify the AWS service this endpoint is for
+#      service_name        = string
+#
+#      #The VPC this is assigned to
+#      vpc                 = string
+#
+#      #Sets optional values
+#      #Valid values include:
+#      #  - "auto_accept" - Accept the VPC endpoint (the VPC endpoint and service need to be in the same AWS account).
+#      #  - "private_dns_enabled" -  (AWS services and AWS Marketplace partner services only) Whether or not to associate a private hosted zone with the specified VPC. Applicable for endpoints of type Interface. 
+#      #  - "ip_address_type=<ipv4|ipv6|dual stack>" - The IP address type for the endpoint. Valid values are ipv4, dualstack, and ipv6.
+#      #  - "security_groupsi=<list of security groups>" - list of security groups to associate with this endpoint. Applicable for endpoints of type Interface. Can be security group defined here or external security group  
+#      #  - "subnets=<list of subnets>" - list of subnets this endpoint is for. Applicable for endpoints of type GatewayLoadBalancer and Interface. Can be for subnets defined here or externally  
+#      #  - "route_table_ids=<route_table_ids>" - One or more route table IDs. Applicable for endpoints of type Gateway.
+#      #  - "vpc_endpoint_type=<Gateway|Interface|GatewayLoadBalancer>" - The VPC endpoint type. Gateway, GatewayLoadBalancer, or Interface. Defaults to Gateway.
+#      #  - "dns_record_ip_type=<ipv4|dualstack|service-defined|ipv6>" 
+#      options             = list(string)
+#      tags                = map(string)
+#    })
+#  )
+#}
 
 variable "transit_gateways" {
   description = "Defines Transit Gateway setup"

@@ -6,17 +6,41 @@
 #  - vpc.tf       - creates VPCs we are peering together
 
 locals {
+  #If the setting "peer_owner_id=<id>" is set in the options list for this VPC peering connection,
+  #Extract the peer owner ID for this connection
+  peer_owner_id_options = {
+    for item in var.vpc_peering:
+      #If the string matches "peer_owner_id=<id>" pull the value of "<id>"
+      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+      item.name => [
+        for option in item.options:
+          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*\\s*peer_owner_id=\\s*\\S",option)) > 0
+      ]
+  }
+
+  #If the setting "peer_region=<region>" is set in the options list for this VPC peering connection,
+  #Extract the peer region for this connection
+  peer_region_options = {
+    for item in var.vpc_peering:
+      #If the string matches "peer_region=<region>" pull the value of "<region>"
+      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+      item.name => [
+        for option in item.options:
+          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*\\s*peer_region=\\s*\\S",option)) > 0
+      ]
+  }
+
   vpc_peering_config = {
     for item in var.vpc_peering: item.name => {
       #First we check if requestor_vpc_name_or_id matches the name of one of the VPCs we created
       #If so, we get the ID from that VPC. If not, we assume this is the VPC ID
-      "requestor_vpc_id"                      = lookup(module.vpcs,item.requestor_vpc_name_or_id,null) != null ? module.vpcs[item.requestor_vpc_name_or_id].vpc.id : item.requestor_vpc_name_or_id
-      "peer_vpc_id"                           = lookup(module.vpcs,item.peer_vpc_name_or_id,null) != null ? module.vpcs[item.peer_vpc_name_or_id].vpc.id : item.peer_vpc_name_or_id
+      "requestor_vpc_id"                      = lookup(module.vpcs,item.requestor_vpc,null) != null ? module.vpcs[item.requestor_vpc].vpc.id : item.requestor_vpc
+      "peer_vpc_id"                           = lookup(module.vpcs,item.peer_vpc,null) != null ? module.vpcs[item.peer_vpc].vpc.id : item.peer_vpc
       "peer_owner_id"                         = item.peer_owner_id 
-      "auto_accept"                           = item.auto_accept
       "peer_region"                           = item.peer_region
-      "accepter_allow_remote_dns_resolution"  = item.accepter_allow_remote_dns_resolution
-      "requester_allow_remote_dns_resolution" = item.requester_allow_remote_dns_resolution
+      "auto_accept"                           = contains(item.options,"auto_accept")
+      "accepter_allow_remote_dns_resolution"  = contains(item.options,"accepter_allow_remote_dns_resolution")
+      "requester_allow_remote_dns_resolution" = contains(item.options,"requester_allow_remote_dns_resolution")
       "tags"                                  = item.tags
     }
   }
