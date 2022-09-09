@@ -16,7 +16,7 @@ locals {
 resource "aws_vpn_gateway" "vpn_gateways" {
   for_each         = toset(local.vpcs_with_vpn_gateways)
   vpc_id           = module.vpcs[each.key].vpc.id
-  amazon_side_asn  = lookup(vpc_config_map[each.key],"amazon_side_asn",null)
+  amazon_side_asn  = lookup(local.vpc_config_map[each.key],"amazon_side_asn",null)
   tags             = {
     "Name" = "VPN gateway for VPC ${each.key}"
     "VPC"  = module.vpcs[each.key].vpc.id
