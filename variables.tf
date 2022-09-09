@@ -30,16 +30,17 @@ variable "vpc_setup" {
        cidr_block                       = string
        #Sets up options values for VPC
        #Valid values include:
-       #  - "has_vpn_gateway = <true|false>"                  - sets up a Virtual Private gateway (VPN gateway) to this VPC
-       #  - "has_internet_gateway = <true|false>"             - sets up an Internet gateway to this VPC
-       #  - "has_egress_only_internet_gateway = <true|false>" - sets up an Egress Only Internet gateway to this VPC
-       #  - "dedicated_tenancy = <true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
-       #  - "disable_dns_support = <true|false>"              - Overrides default setting that sets enable_dns_support to true
-       #  - "enable_dns_hostname = <true|false>"              - Overrides default setting that sets enable_dns_hostname to false
-       #  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
-       #  - "amazon_side_asn=<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
+       #  - has_vpn_gateway = "<true|false>"                  - sets up a Virtual Private gateway (VPN gateway) to this VPC
+       #  - has_internet_gateway = "<true|false>"             - sets up an Internet gateway to this VPC
+       #  - has_egress_only_internet_gateway = "<true|false>" - sets up an Egress Only Internet gateway to this VPC
+       #  - dedicated_tenancy = "<true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
+       #  - disable_dns_support = "<true|false>"              - Overrides default setting that sets enable_dns_support to true
+       #  - enable_dns_hostname = "<true|false>"              - Overrides default setting that sets enable_dns_hostname to false
+       #  - assign_generated_ipv6_cidr_block = "<true|false>" - Assigns an IPv6 CIDR block
+       #  - amazon_side_asn="<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
+       #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
        options                          = map(string)
-       tags                             = map(string)
+       #tags                             = map(string)
        
        subnets = list(
          object({

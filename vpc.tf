@@ -9,7 +9,10 @@ locals {
       "cidr_block"                       = item.cidr_block 
       "options"                          = item.options
       "amazon_side_asn"                  = lookup(item.options,"amazon_side_asn",null)
-      "tags"                             = merge({"Name" = item.name},item.tags)
+      "tags"                             = lookup(item.options,"tags",null) == null ? {} : {
+                                             for tag in split(",",item.options["tags"]): 
+                                               element(split("=",tag),0) => element(split("=",tag),1)
+                                           }
       "subnets"                          = item.subnets
     }
   }
@@ -20,7 +23,7 @@ module "vpcs" {
   source                           = "./modules/vpc"
   for_each                         = local.vpc_config_map
   name                             = each.key
-  tags                             = each.value.tags
+  tags                             = merge({"Name" = each.key},each.value.tags)
   cidr_block                       = each.value.cidr_block
   options                          = each.value.options
   subnets                          = each.value.subnets
