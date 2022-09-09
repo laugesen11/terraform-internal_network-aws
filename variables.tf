@@ -56,7 +56,7 @@ variable "vpc_setup" {
            #  - "ipv6_cidr_block=<IPv6 CIDR block>"              - The IPv6 network range for the subnet, in CIDR notation. The subnet size must use a /64 prefix length.
            #  - "availability_zone=<AWS Availability zone>"      - AZ for the subnet
            #  - "tags=map(strings)"
-           options = map
+           options = map(any)
          })
        )
      })
