@@ -8,7 +8,6 @@ locals {
     for item in var.vpc_setup: item.name => {
       "cidr_block"                       = item.cidr_block 
       "options"                          = item.options
-      "tags"                             = merge({"Name" = item.name}, item.tags)
       "amazon_side_asn"                  = lookup(item.options,"amazon_side_asn",null)
       "subnets"                          = item.subnets
     }
@@ -22,6 +21,5 @@ module "vpcs" {
   name                             = each.key
   cidr_block                       = each.value.cidr_block
   options                          = each.value.options
-  tags                             = each.value.tags
   subnets                          = each.value.subnets
 }
