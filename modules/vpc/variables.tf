@@ -28,10 +28,11 @@ variable "tags" {
 }
 
 #Valid values include:
-#  - "dedicated_tenancy = <true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
-#  - "disable_dns_support = <true|false>"              - Overrides default setting that sets enable_dns_support to true
-#  - "enable_dns_hostname = <true|false>"              - Overrides default setting that sets enable_dns_hostname to false
-#  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
+#  - dedicated_tenancy = "<true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
+#  - disable_dns_support = "<true|false>"              - Overrides default setting that sets enable_dns_support to true
+#  - enable_dns_hostname = "<true|false>"              - Overrides default setting that sets enable_dns_hostname to false
+#  - assign_generated_ipv6_cidr_block = "<true|false>" - Assigns an IPv6 CIDR block
+#  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
 variable "options" {
   type    = map(string)
   default = null

@@ -6,7 +6,10 @@ locals {
     for item in var.subnets: item.name => {
       "cidr_block" = item.cidr_block
       "options"    = item.options
-      "tags"       = merge({"Name" = var.name}, item.tags)
+      "tags"       = lookup(item.options,"tags",null) == null ? {} : {
+                       for tag in split(",",item.options["tags"]):
+                         element(split("=",tag),0) => element(split("=",tag),1)
+                     }
     }
   }
 }
@@ -34,5 +37,5 @@ resource "aws_subnet" "subnets" {
   map_public_ip_on_launch                        = lookup(each.value.options,"map_public_ip_on_launch",null)
   availability_zone                              = lookup(each.value.options,"availability_zone",null)
   ipv6_cidr_block                                = lookup(each.value.options,"ipv6_cidr_block",null)
-  tags                                           = each.value.tags
+  tags                                           = merge({"Name" = var.name}, each.value.tags)
 }
