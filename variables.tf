@@ -30,33 +30,33 @@ variable "vpc_setup" {
        cidr_block                       = string
        #Sets up options values for VPC
        #Valid values include:
-       #  - "has_vpn_gateway"                  - sets up a Virtual Private gateway (VPN gateway) to this VPC
-       #  - "has_internet_gateway"             - sets up an Internet gateway to this VPC
-       #  - "has_egress_only_internet_gateway" - sets up an Egress Only Internet gateway to this VPC
-       #  - "dedicated_tenancy"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
-       #  - "disable_dns_support"              - Overrides default setting that sets enable_dns_support to true
-       #  - "enable_dns_hostname"              - Overrides default setting that sets enable_dns_hostname to false
-       #  - "assign_generated_ipv6_cidr_block" - Assigns an IPv6 CIDR block
+       #  - "has_vpn_gateway = <true|false>"                  - sets up a Virtual Private gateway (VPN gateway) to this VPC
+       #  - "has_internet_gateway = <true|false>"             - sets up an Internet gateway to this VPC
+       #  - "has_egress_only_internet_gateway = <true|false>" - sets up an Egress Only Internet gateway to this VPC
+       #  - "dedicated_tenancy = <true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
+       #  - "disable_dns_support = <true|false>"              - Overrides default setting that sets enable_dns_support to true
+       #  - "enable_dns_hostname = <true|false>"              - Overrides default setting that sets enable_dns_hostname to false
+       #  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
        #  - "amazon_side_asn=<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
-       options                          = list(string)
-       tags                             = map(string)
+       #  - "tags=map(strings)"
+       options                          = map(any)
  
        subnets = list(
          object({
            name              = string
            cidr_block        = string
-           tags              = map(string)
            #Sets optional values for subnets
            #Valid values include:
-           #  - "assign_ipv6_address_on_creation"                - indicates that network interfaces created in the specified subnet should be assigned an IPv6 address
-           #  - "enable_dns64"                                   - Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations
-           #  - "enable_resource_name_dns_aaaa_record_on_launch" - Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records
-           #  - "enable_resource_name_dns_a_record_on_launch"    - Indicates whether to respond to DNS queries for instance hostnames with DNS A records
-           #  - "ipv6_native"                                    - Indicates whether to create an IPv6-only subnet
-           #  - "map_public_ip_on_launch"                        - Specify true to indicate that instances launched into the subnet should be assigned a public IP address
+           #  - "assign_ipv6_address_on_creation = <true|false>"                - indicates that network interfaces created in the specified subnet should be assigned an IPv6 address
+           #  - "enable_dns64 = <true|false>"                                   - Indicates whether DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations
+           #  - "enable_resource_name_dns_aaaa_record_on_launch = <true|false>" - Indicates whether to respond to DNS queries for instance hostnames with DNS AAAA records
+           #  - "enable_resource_name_dns_a_record_on_launch = <true|false>"    - Indicates whether to respond to DNS queries for instance hostnames with DNS A records
+           #  - "ipv6_native = <true|false>"                                    - Indicates whether to create an IPv6-only subnet
+           #  - "map_public_ip_on_launch = <true|false>"                        - Specify true to indicate that instances launched into the subnet should be assigned a public IP address
            #  - "ipv6_cidr_block=<IPv6 CIDR block>"              - The IPv6 network range for the subnet, in CIDR notation. The subnet size must use a /64 prefix length.
            #  - "availability_zone=<AWS Availability zone>"      - AZ for the subnet
-           options = list(string)
+           #  - "tags=map(strings)"
+           options = map
          })
        )
      })
