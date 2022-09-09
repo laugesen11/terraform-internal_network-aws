@@ -23,12 +23,15 @@ variable "cidr_block" {
   type = string
 }
 
+variable "tags" {
+  type = map(string)
+}
+
 #Valid values include:
 #  - "dedicated_tenancy = <true|false>"                - sets up the instance_tenancy to be "dedicated". If not set, instance_tenancy is set to "default", or shared tenancy
 #  - "disable_dns_support = <true|false>"              - Overrides default setting that sets enable_dns_support to true
 #  - "enable_dns_hostname = <true|false>"              - Overrides default setting that sets enable_dns_hostname to false
 #  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
-#  - "tags=map"
 variable "options" {
   type    = map(string)
   default = null

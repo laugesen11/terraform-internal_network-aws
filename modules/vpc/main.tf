@@ -4,8 +4,9 @@ locals {
   #Set up the subnets we are building
   subnet_config = {
     for item in var.subnets: item.name => {
-      "cidr_block"                       = item.cidr_block
-      "options"                          = item.options
+      "cidr_block" = item.cidr_block
+      "options"    = item.options
+      "tags"       = merge({"Name" = var.name}, item.tags)
     }
   }
 }
@@ -17,7 +18,7 @@ resource "aws_vpc" "vpc" {
   enable_dns_support               = lookup(var.options,"disable_dns_support",false)
   enable_dns_hostnames             = lookup(var.options,"enable_dns_hostname",false)
   instance_tenancy                 = lookup(var.options,"dedicated_tenancy","default") 
-  tags                             = merge({"Name" = var.name}, lookup(var.options,"tags",{}))
+  tags                             = merge({"Name" = var.name}, var.tags)
 }
 
 #Build our subnets
@@ -33,5 +34,5 @@ resource "aws_subnet" "subnets" {
   map_public_ip_on_launch                        = contains(each.value.options,"map_public_ip_on_launch")
   availability_zone                              = lookup(each.value.options,"availability_zone",null)
   ipv6_cidr_block                                = lookup(each.value.options,"ipv6_cidr_block",null)
-  tags                                           = merge({"Name" = var.name}, lookup(var.options,"tags",{}))
+  tags                                           = each.value.tags
 }

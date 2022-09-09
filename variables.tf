@@ -38,9 +38,9 @@ variable "vpc_setup" {
        #  - "enable_dns_hostname = <true|false>"              - Overrides default setting that sets enable_dns_hostname to false
        #  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
        #  - "amazon_side_asn=<number>"         - sets up a custom Amaon side ASN for use with VPN gateway. If notdd set, AWS will set a default value
-       #  - "tags=map(strings)"
-       options                          = map(any)
- 
+       options                          = map(string)
+       tags                             = map(strings)
+       
        subnets = list(
          object({
            name              = string
@@ -55,8 +55,8 @@ variable "vpc_setup" {
            #  - "map_public_ip_on_launch = <true|false>"                        - Specify true to indicate that instances launched into the subnet should be assigned a public IP address
            #  - "ipv6_cidr_block=<IPv6 CIDR block>"              - The IPv6 network range for the subnet, in CIDR notation. The subnet size must use a /64 prefix length.
            #  - "availability_zone=<AWS Availability zone>"      - AZ for the subnet
-           #  - "tags=map(strings)"
-           options = map(any)
+           options = map(string)
+           tags    = map(strings)
          })
        )
      })
