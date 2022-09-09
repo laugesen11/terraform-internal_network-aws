@@ -30,7 +30,7 @@ variable "cidr_block" {
 #  - "assign_generated_ipv6_cidr_block = <true|false>" - Assigns an IPv6 CIDR block
 #  - "tags=map"
 variable "options" {
-  type    = map
+  type    = map(string)
   default = null
 }
 
@@ -51,7 +51,7 @@ variable "subnets" {
       #  - "map_public_ip_on_launch = <true|false>"        - Specify true to indicate that instances launched into the subnet should be assigned a public IP address
       #  - "ipv6_cidr_block=<IPv6 CIDR block>"- The IPv6 network range for the subnet, in CIDR notation. The subnet size must use a /64 prefix length.
       #  - "availability_zone=<AWS Availability zone>"      - AZ for the subnet
-      options = map(any)
+      options = map(string)
 
     })
   )
