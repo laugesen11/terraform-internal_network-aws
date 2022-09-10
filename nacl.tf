@@ -31,7 +31,7 @@ locals {
     for item in var.nacl_setup:
       item.nacl_name => [
         for rule in item.nacl_rules: 
-          rule if !contains(rule.options,"is_ingress")
+          rule if lookup(rule.options,"is_ingress") != "true"
       ]
   }
 
@@ -40,7 +40,8 @@ locals {
     for item in var.nacl_setup:
       item.nacl_name => [
         for rule in item.nacl_rules: 
-          rule if contains(rule.options,"is_ingress")
+          rule if lookup(rule.options,"is_ingress") == "true"
+
       ]
   }
 

@@ -110,7 +110,7 @@ variable "nacl_setup" {
           #  - "from_port=<number>"   - sets the minimum port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
           #  - "to_port=<number>"     - sets the max port port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
           #  - "protocol=<string>"    - sets the protocol if we want to handle all that ourselves. Can set to 'all' for all protocols 
-          options         = list(string)
+          options         = map(string)
         })
       )
     })
