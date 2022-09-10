@@ -44,7 +44,7 @@ variable "subnets" {
       name                    = string
       #Only set to null if you also specify "ipv6_native" and setup an IPv CIDR block in options
       cidr_block              = string
-      tags                    = map(string)
+      #tags                    = map(string)
       #Sets optional values for subnets
       #Valid values include:
       #  - "assign_ipv6_address_on_creation = <true|false>" - indicates that network interfaces created in the specified subnet should be assigned an IPv6 address
