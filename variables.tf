@@ -188,7 +188,8 @@ variable "transit_gateways" {
       #    - "enable_dns_support"=<true|false>                     - Whether DNS support is enabled
       #    - "enable_vpn_ecmp_support"=<true|false>                - Whether VPN Equal Cost Multipath Protocol support is enabled
       #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
-      options                                = list(string)
+      options = map(string)
+
     })
   )
 }
