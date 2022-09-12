@@ -88,10 +88,10 @@ locals {
     for item in var.egress: item.rule_number => {
       #If "item.traffic_type" is set to null or "custom", we use the values set in options for this rule. 
       #Otherwise we assume "item.traffic_type" is set to a value in local.traffic_type_mappings map.
-      protocol        = item.traffic_type == null || item.traffic_type == "custom" ? lookup(item.options,"protocol") : local.traffic_type_mappings[item.traffic_type]["protocol"]
+      protocol        = item.traffic_type == null || item.traffic_type == "custom" ? lookup(item.options,"protocol",null) : local.traffic_type_mappings[item.traffic_type]["protocol"]
  
       #Set to "allow" unless we have "deny_access" in options map
-      action          = lookup(item.options,"deny_access") == "true" ? "deny" : "allow"
+      action          = lookup(item.options,"deny_access","false") == "true" ? "deny" : "allow"
    
       #Set to the external_cidr_range value set in the rule if external_cidr_range contains a "."
       cidr_block      = length(regexall("\\.",item.external_cidr_range)) > 0 ? item.external_cidr_range : null
@@ -108,10 +108,10 @@ locals {
 
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in options for this rule. 
-      icmp_type       = item.traffic_type == null || item.traffic_type == "custom" && lookup(item.options,"protocol") == "icmp" ? lookup(item.options,"icmp_type",null) : null
+      icmp_type       = item.traffic_type == null || item.traffic_type == "custom" && lookup(item.options,"protocol",null) == "icmp" ? lookup(item.options,"icmp_type",null) : null
 
       #If "item.traffic_type" is set to null or "custom" and the protocol is "icmp", we use the values set in options for this rule. 
-      icmp_code       = item.traffic_type == null || item.traffic_type == "custom" && lookup(item.options,"protocol") == "icmp" ? lookup(item.options,"icmp_code",null) : null
+      icmp_code       = item.traffic_type == null || item.traffic_type == "custom" && lookup(item.options,"protocol",null) == "icmp" ? lookup(item.options,"icmp_code",null) : null
     }
   }
 
