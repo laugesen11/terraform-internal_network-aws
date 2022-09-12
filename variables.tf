@@ -166,7 +166,7 @@ variable "vpc_peering" {
       #  - "peer_region"="<region>" - region of the accepter VPC of the VPC Peering Connection (auto_accept must be false)
       #  - "peer_owner_id"="<id>" - The AWS account ID of the owner of the peer VPC. Defaults to the account ID the AWS provider is currently connected to.
       #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
-      options       = list(string)     
+      options       = map(string)     
     })
   )
 }
