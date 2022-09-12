@@ -13,7 +13,7 @@ locals {
       #Check if we can pull the ID from the VPC module using the VPC name. If not, we assume this is the VPC ID
       item.nacl_name => {
         "vpc"     = lookup(module.vpcs,item.vpc,null) != null ? module.vpcs[item.vpc].vpc.id : item.vpc
-        "tags"    = merge({"Name" = item.name},item.tags)
+        "tags"    = merge({"Name" = item.nacl_name},item.tags)
 
         "subnets" = [
           for subnet in item.subnets: 
