@@ -160,14 +160,13 @@ variable "vpc_peering" {
       
       #Sets optional values
       #Valid values include:
-      #  - "auto_accept" - Accept the peering (both VPCs need to be in the same AWS account and region).
-      #  - "accepter_allow_remote_dns_resolution" - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
-      #  - "requester_allow_remote_dns_resolution" - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
-      #  - "peer_region=<region>" - region of the accepter VPC of the VPC Peering Connection (auto_accept must be false)
-      #  - "peer_owner_id=<id>" - The AWS account ID of the owner of the peer VPC. Defaults to the account ID the AWS provider is currently connected to.
+      #  - "auto_accept"=<true|false> - Accept the peering (both VPCs need to be in the same AWS account and region).
+      #  - "accepter_allow_remote_dns_resolution"=<true|false> - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
+      #  - "requester_allow_remote_dns_resolution"=<true|false> - Allow a local VPC to resolve public DNS hostnames to private IP addresses when queried from instances in the peer VPC
+      #  - "peer_region"="<region>" - region of the accepter VPC of the VPC Peering Connection (auto_accept must be false)
+      #  - "peer_owner_id"="<id>" - The AWS account ID of the owner of the peer VPC. Defaults to the account ID the AWS provider is currently connected to.
+      #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
       options       = list(string)     
-
-      tags                                  = map(string) 
     })
   )
 }
