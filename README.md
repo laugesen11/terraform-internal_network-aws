@@ -9,7 +9,6 @@
 - nat_gateway.tf                  - Creates NAT gateways and EIPs 
 - vpn_gateway.tf                  - Creates VPN Gateways 
 - transit_gateway.tf              - Creates Transit Gateways and Transit Gateway VPC attachments (must have this to add Transit GW to route table)
-- vpc_endpoint.tf                 - Creates VPC endpoints
 - vpc_peering.tf                  - Creates VPC peering connections
 - vpc.tf                          - Calls the VPC child module to creates VPCs and subnets
 - nacl.tf                         - Calls the NACL child module to create and assign Network Access Control Lists
