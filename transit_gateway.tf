@@ -7,29 +7,20 @@
 #    - transit_gateway_vpc_attachment variable
 
 locals {
-  #If the setting "amazon_side_asn=<number>" is set in the options list for this transit gateway,
-  #extract the AS Number from this input for use later
-  transit_gw_with_custom_asn = {
-    for item in var.transit_gateways:
-      #If the string matches "amazon_side_asn=<number>" pull the value of "<number>"
-      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
-      item.name => [
-        for option in item.options:
-          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*amazon_side_asn\\s*=\\s*\\S",option)) > 0
-      ]
-  }
-  
   #Configurations for transit gateways
   transit_gateway_config = var.transit_gateways != null ? {
     for item in var.transit_gateways: item.name => {
-      "description"                            = "Transit gateway named ${item.name}"
-      "amazon_side_asn"                        = length(local.transit_gw_with_custom_asn[item.name]) > 0 ? local.transit_gw_with_custom_asn[item.name][0] : null
-      "auto_accept_shared_attachments"         = contains(item.options,"auto_accept_shared_attachments") ? "enable" : "disable"
-      "enable_default_route_table_association" = contains(item.options,"enable_default_route_table_association") ? "enable" : "disable"
-      "enable_default_route_table_propagation" = contains(item.options,"enable_default_route_table_propagation") ? "enable" : "disable"
-      "enable_dns_support"                     = contains(item.options,"enable_dns_support") ? "enable" : "disable"
-      "enable_vpn_ecmp_support"                = contains(item.options,"enable_vpn_ecmp_support") ? "enable" : "disable"
-      "tags"                                   = merge({"Name" = item.name},item.tags)
+      "description"                            = lookup(item.options,"description","Transit gateway named ${item.name}")
+      "amazon_side_asn"                        = lookup(item.options,"amazon_side_asn",null)
+      "auto_accept_shared_attachments"         = lookup(item.options,"auto_accept_shared_attachments","false") == "true" ? "enable" : "disable"
+      "enable_default_route_table_association" = lookup(item.options,"enable_default_route_table_association","false") == "true" ? "enable" : "disable"
+      "enable_default_route_table_propagation" = lookup(item.options,"enable_default_route_table_propagation","false") == "true" ? "enable" : "disable"
+      "enable_dns_support"                     = lookup(item.options,"enable_dns_support","false") == "true" ? "enable" : "disable"
+      "enable_vpn_ecmp_support"                = lookup(item.options,"enable_vpn_ecmp_support","false") == "true"? "enable" : "disable"
+      "tags"                                   = lookup(item.options,"tags",null) == null ? {} : {
+                                                   for tag in split(",",item.options["tags"]):
+                                                     element(split("=",tag),0) => element(split("=",tag),1)
+                                                 }
     } 
   } : {}
 }
@@ -43,7 +34,7 @@ resource "aws_ec2_transit_gateway" "transit_gateways" {
   default_route_table_propagation = each.value.enable_default_route_table_propagation 
   dns_support                     = each.value.enable_dns_support 
   vpn_ecmp_support                = each.value.enable_vpn_ecmp_support 
-  tags                            = each.value.tags
+  tags                            = merge({"Name" = each.key},each.value.tags)
 }
 
 locals{
@@ -56,18 +47,22 @@ locals{
 
       #If item.vpc_id is not null, we use that value. Otherwise, we resolve item.vpc_name using the VPCs created in module.vpcs in vpc.tf
       "vpc_id"                                          = lookup(module.vpcs,item.vpc,null) != null ? module.vpcs[item.vpc].vpc.id : item.vpc
-      "tags"                                            = merge({"Name" = item.name}, item.tags)
-      "appliance_mode_support"                          = contains(item.options,"appliance_mode_support") ? "enable" : "disable"
-      "dns_support"                                     = contains(item.options,"disable_dns_support") ? "disable" : "enable"
-      "ipv6_support"                                    = contains(item.options,"ipv6_support") ? "enable" : "disable"
-      "transit_gateway_default_route_table_association" = contains(item.options,"transit_gateway_default_route_table_association")
-      "transit_gateway_default_route_table_propagation" = contains(item.options,"transit_gateway_default_route_table_propagation")
+      "appliance_mode_support"                          = lookup(item.options,"appliance_mode_support","false") == "true" ? "enable" : "disable"
+      "dns_support"                                     = lookup(item.options,"disable_dns_support","false") == "true" ? "disable" : "enable"
+      "ipv6_support"                                    = lookup(item.options,"ipv6_support","false") == "true" ? "enable" : "disable"
+      "transit_gateway_default_route_table_association" = lookup(item.options,"transit_gateway_default_route_table_association","false")
+      "transit_gateway_default_route_table_propagation" = lookup(item.options,"transit_gateway_default_route_table_propagation","false")
       #If we can resolve a value for item.vpc in module.vpcs, we will attempt to resolve this subnet entry to a subnet name in module.vpcs
       #If one or either cannot be resolved, we assume this is a subnet ID
       "subnet_ids"  = [
         for subnet in item.subnets: 
           lookup(module.vpcs,item.vpc,null) == null ? subnet : (lookup(module.vpcs[item.vpc].subnets,subnet,null) != null ? module.vpcs[item.vpc].subnets[subnet].id : subnet ) 
       ]
+
+      "tags"        = lookup(item.options,"tags",null) == null ? {} : {
+                                                   for tag in split(",",item.options["tags"]):
+                                                     element(split("=",tag),0) => element(split("=",tag),1)
+                                                 }
     }
   } : {}
 }
@@ -82,5 +77,5 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "transit_gateway_vpc_attachmen
   transit_gateway_default_route_table_association = each.value.transit_gateway_default_route_table_association
   transit_gateway_default_route_table_propagation = each.value.transit_gateway_default_route_table_propagation
   subnet_ids                                      = each.value.subnet_ids
-  tags                                            = each.value.tags
+  tags                                            = merge({"Name" = each.key},each.value.tags)
 }

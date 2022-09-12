@@ -27,18 +27,6 @@ locals{
     for item in var.nat_gateways: 
       item.name if lookup(item.options,"make_elastic_ip","false") == "true"
   ]
-  
-  #List of NAT gateway names with existing EIP ID submitted
-  #If the setting "elastic_ip_id=<id>" is set, we capture that value
-#  elastic_ip_ids = {
-#    for item in var.nat_gateways:
-#      #If the string matches  "elastic_ip_id=<id>" pull the value of "<id>"
-#      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
-#      item.name => [
-#        for option in item.options:
-#          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*elastic_ip_id\\s*=\\s*\\S",option)) > 0
-#      ]
-#  }
 }
 
 #Create our elastic IP addresses

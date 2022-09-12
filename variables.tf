@@ -178,16 +178,16 @@ variable "transit_gateways" {
   type = list(
     object({
       name                                   = string 
-      tags                                   = map(string)    
-      
+
       #Sets optional values for transit gateway
       #  Valid values:
-      #    - "amazon_side_asn=<number>"               - Set if you have a specific ASN you need to use. 
-      #    - "auto_accept_shared_attachments"         - Whether resource attachment requests are automatically accepted
-      #    - "enable_default_route_table_association" - Whether resource attachments are automatically associated with the default association route table
-      #    - "enable_default_route_table_propagation" - Whether resource attachments automatically propagate routes to the default propagation route table 
-      #    - "enable_dns_support"                     - Whether DNS support is enabled
-      #    - "enable_vpn_ecmp_support"                - Whether VPN Equal Cost Multipath Protocol support is enabled
+      #    - "amazon_side_asn"="<number>"               - Set if you have a specific ASN you need to use. 
+      #    - "auto_accept_shared_attachments"=<true|false>         - Whether resource attachment requests are automatically accepted
+      #    - "enable_default_route_table_association"=<true|false> - Whether resource attachments are automatically associated with the default association route table
+      #    - "enable_default_route_table_propagation"=<true|false> - Whether resource attachments automatically propagate routes to the default propagation route table 
+      #    - "enable_dns_support"=<true|false>                     - Whether DNS support is enabled
+      #    - "enable_vpn_ecmp_support"=<true|false>                - Whether VPN Equal Cost Multipath Protocol support is enabled
+      #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
       options                                = list(string)
     })
   )
@@ -207,16 +207,16 @@ variable "transit_gateway_vpc_attachments" {
       vpc                        = string
       #If we can resolve a name in "vpc_setup" variable, we use that ID. Otherwise we expect this is a subnet ID
       subnets                    = list(string)
-      tags                       = map(string)
 
       #Sets optional values for transit gateway VPC attachment
       #  Valid values:
-      #    - "enable_appliance_mode_support" - If enabled, a traffic flow between a source and destination uses the same Availability Zone for the VPC attachment for the lifetime of that flow
-      #    - "disable_dns_support" - Whether DNS support is enabled
-      #    - "enable_ipv6_support" - Whether IPv6 support is enabled
-      #    - "enable_transit_gateway_default_route_table_association" - Boolean whether the VPC Attachment should be associated with the EC2 Transit Gateway association default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways 
-      #    - "enable_transit_gateway_default_route_table_propagation" - Boolean whether the VPC Attachment should propagate routes with the EC2 Transit Gateway propagation default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways
-      options                    = list(string)
+      #    - "enable_appliance_mode_support"=<true|false> - If enabled, a traffic flow between a source and destination uses the same Availability Zone for the VPC attachment for the lifetime of that flow
+      #    - "disable_dns_support"=<true|false> - Whether DNS support is enabled
+      #    - "enable_ipv6_support"=<true|false> - Whether IPv6 support is enabled
+      #    - "enable_transit_gateway_default_route_table_association"=<true|false> - Boolean whether the VPC Attachment should be associated with the EC2 Transit Gateway association default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways 
+      #    - "enable_transit_gateway_default_route_table_propagation"=<true|false> - Boolean whether the VPC Attachment should propagate routes with the EC2 Transit Gateway propagation default route table. This cannot be configured or perform drift detection with Resource Access Manager shared EC2 Transit Gateways
+      #  - tags="<tag_name1>=<tag_value1>,<tag_name2>=<tag_value2>,..."
+      options                    = map(string)
     })
   )
 }
