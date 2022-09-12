@@ -9,7 +9,7 @@ locals{
 
   nat_gateways_config = {  
     for item in var.nat_gateways: item.name => {
-      "is_public" = contains(item.options,"is_public")
+      "is_public" = lookup(item.options,"is_public","false")
       "options"   = item.options
       #If we specify the VPC name, we use that value to determine the subnet ID from this module
       #subnet_name_or_id will be assumed to be the name of a subnet set in this module. 
@@ -25,20 +25,20 @@ locals{
   #List of NAT Gateway names that need elastic IP address
   elastic_ips_to_make = [
     for item in var.nat_gateways: 
-      item.name if contains(item.options,"make_elastic_ip")
+      item.name if lookup(item.options,"make_elastic_ip","false") == "true"
   ]
   
   #List of NAT gateway names with existing EIP ID submitted
   #If the setting "elastic_ip_id=<id>" is set, we capture that value
-  elastic_ip_ids = {
-    for item in var.nat_gateways:
-      #If the string matches  "elastic_ip_id=<id>" pull the value of "<id>"
-      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
-      item.name => [
-        for option in item.options:
-          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*elastic_ip_id\\s*=\\s*\\S",option)) > 0
-      ]
-  }
+#  elastic_ip_ids = {
+#    for item in var.nat_gateways:
+#      #If the string matches  "elastic_ip_id=<id>" pull the value of "<id>"
+#      #WARNING: While this makes a list, we will only use the first value, so please do not set multiple values to prevent confusion
+#      item.name => [
+#        for option in item.options:
+#          chomp(trimspace(element(split("=",option),1))) if length(regexall("\\s*elastic_ip_id\\s*=\\s*\\S",option)) > 0
+#      ]
+#  }
 }
 
 #Create our elastic IP addresses
