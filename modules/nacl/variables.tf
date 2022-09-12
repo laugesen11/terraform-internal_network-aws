@@ -88,12 +88,12 @@ variable "ingress" {
 
           #Sets optional settings for rules
           #Valid values include:
-          #  - "deny_access" - set this rule to deny access
-          #  - "icmp_type=<string>"   - sets the ICMP type if handling ICMP
-          #  - "icmp_code=<string>"   - sets the ICMP code if handling ICMP
-          #  - "from_port=<number>"   - sets the minimum port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
-          #  - "to_port=<number>"     - sets the max port port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
-          #  - "protocol=<string>"    - sets the protocol if we want to handle all that ourselves. Can set to 'all' for all protocols
+          #  - "deny_access"=<true|false> - set this rule to deny access
+          #  - "icmp_type"="<string>"   - sets the ICMP type if handling ICMP
+          #  - "icmp_code"="<string>"   - sets the ICMP code if handling ICMP
+          #  - "from_port"="<number>"   - sets the minimum port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
+          #  - "to_port"="<number>"     - sets the max port port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
+          #  - "protocol"="<string>"    - sets the protocol if we want to handle all that ourselves. Can set to 'all' for all protocols
           options             = map(string)
     })
   )

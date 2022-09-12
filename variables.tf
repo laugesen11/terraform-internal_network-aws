@@ -79,7 +79,9 @@ variable "nacl_setup" {
 
         #Can be set to subnet IDs or names used in this module
         subnets  = list(string)
-
+  
+        tags     = map(string)
+ 
         nacl_rules    = list(object({
           #Set's the traffic type
           #Set to null or "custom" to set protocol, to_port, and from_port yourself
@@ -103,13 +105,13 @@ variable "nacl_setup" {
  
           #Sets optional settings for rules
           #Valid values include:
-          #  - "deny_access" - set this rule to deny access
-          #  - "is_ingress"  - set this rule to be an ingress. Otherwise, this will be an egress rule
-          #  - "icmp_type=<string>"   - sets the ICMP type if handling ICMP
-          #  - "icmp_code=<string>"   - sets the ICMP code if handling ICMP
-          #  - "from_port=<number>"   - sets the minimum port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
-          #  - "to_port=<number>"     - sets the max port port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
-          #  - "protocol=<string>"    - sets the protocol if we want to handle all that ourselves. Can set to 'all' for all protocols 
+          #  - "deny_access"=<true|false> - set this rule to deny access
+          #  - "is_ingress"=<true|false>  - set this rule to be an ingress. Otherwise, this will be an egress rule
+          #  - "icmp_type"="<string>"   - sets the ICMP type if handling ICMP
+          #  - "icmp_code"="<string>"   - sets the ICMP code if handling ICMP
+          #  - "from_port"="<number>"   - sets the minimum port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
+          #  - "to_port"="<number>"     - sets the max port port range for custom setup. Set to '0' for all. If not set, set equal to "to_port"
+          #  - "protocol"="<string>"    - sets the protocol if we want to handle all that ourselves. Can set to 'all' for all protocols 
           options         = map(string)
         })
       )
